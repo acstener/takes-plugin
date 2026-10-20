@@ -1,11 +1,11 @@
 ---
 name: takes
-description: Record the user's screen, camera and mic with the Takes Mac app, edit the take by its transcript (cut words, fillers, pauses), look at frames, and share a link. Use when the user says "record this", "let's do a take", "start/stop recording", "tidy up / edit my last video", "cut the ums", or "give me a link to it".
+description: Record the user's screen, camera and mic with the Blazing Video Mac app, edit the take by its transcript (cut words, fillers, pauses), look at frames, and share a link. Use when the user says "record this", "let's do a take", "start/stop recording", "tidy up / edit my last video", "cut the ums", or "give me a link to it".
 ---
 
-# Takes
+# Blazing Video
 
-Takes is a Mac app: a menu-bar recorder plus a transcript-first editor. Its tools come from the `takes` MCP server on the user's Mac (`127.0.0.1:43120`). If a call fails to connect, ask the user to open Takes (it lives in the menu bar).
+Blazing Video is a Mac app: a menu-bar recorder plus a transcript-first editor. Its tools come from the `takes` MCP server on the user's Mac (`127.0.0.1:43120`). If a call fails to connect, ask the user to open Blazing Video (it lives in the menu bar).
 
 ## Recording
 1. `start_recording` — returns once it is actually rolling. If it returns a camera warning instead, it is NOT recording: tell the user why and offer `start_recording` with `camera: false`.
@@ -26,7 +26,7 @@ Takes is a Mac app: a menu-bar recorder plus a transcript-first editor. Its tool
 - `share` publishes to a public (unguessable) link: only share when the user asked for a link or to post it.
 
 ## Exporting
-- `export` writes an MP4 to `~/Movies/Takes` and returns the path. HEVC native by default; pass `codec: "h264"` for maximum compatibility.
+- `export` writes an MP4 to `~/Movies/Blazing Video` and returns the path. HEVC native by default; pass `codec: "h264"` for maximum compatibility.
 
 ## Tone
 Be brief while recording. After editing, say in one or two sentences what you cut and the new length.
