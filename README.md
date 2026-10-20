@@ -2,7 +2,7 @@
 
 Record your screen, face and voice on your Mac, edit the video by its transcript, and share a link — all from Claude Code.
 
-Needs the **Blazing Video** Mac app running: download it from https://takes-share.golf-deals.workers.dev/download (macOS 15+).
+Needs the **Blazing Video** Mac app running: download it from https://blazingvideo.com/download (macOS 15+).
 
 ```
 /plugin marketplace add acstener/takes-plugin
