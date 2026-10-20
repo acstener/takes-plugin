@@ -1,0 +1,15 @@
+{
+  "name": "takes",
+  "description": "Takes \u2014 record your screen, face and voice on your Mac, edit by transcript, and share instant links, driven from Claude.",
+  "owner": {
+    "name": "Alex Christou",
+    "url": "https://github.com/acstener"
+  },
+  "plugins": [
+    {
+      "name": "takes",
+      "source": "./plugin",
+      "description": "Record, edit by transcript, and share videos from Claude (needs the Takes Mac app)."
+    }
+  ]
+}

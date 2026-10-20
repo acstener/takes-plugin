@@ -1,0 +1,8 @@
+{
+  "name": "takes",
+  "version": "0.1.0",
+  "description": "Record your screen, face and voice, edit the video by its transcript, and share a link — from Claude. Needs the Takes app running on your Mac.",
+  "author": { "name": "Alex Christou", "url": "https://github.com/acstener" },
+  "homepage": "https://takes-share.golf-deals.workers.dev",
+  "keywords": ["video", "screen-recording", "editing", "transcript", "loom"]
+}
