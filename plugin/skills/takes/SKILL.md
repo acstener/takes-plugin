@@ -1,6 +1,6 @@
 ---
 name: takes
-description: Record the user's screen, camera and mic with the Blazing Video Mac app, edit the take by its transcript (cut words, fillers, pauses), look at frames, and share a link. Use when the user says "record this", "let's do a take", "start/stop recording", "tidy up / edit my last video", "cut the ums", or "give me a link to it".
+description: Record the user's screen, camera and mic with the Blazing Video Mac app, watch any video file (transcript + key frames in one call), edit the take by its transcript (cut words, fillers, pauses), look at frames, and share a link. Use when the user says "record this", "let's do a take", "start/stop recording", "watch this video", hands you an .mp4/.mov path (feedback walkthrough, bug repro), "tidy up / edit my last video", "cut the ums", or "give me a link to it".
 ---
 
 # Blazing Video
@@ -9,15 +9,24 @@ Blazing Video is a Mac app: a menu-bar recorder plus a transcript-first editor. 
 
 ## Recording
 1. `start_recording` — returns once it is actually rolling. If it returns a camera warning instead, it is NOT recording: tell the user why and offer `start_recording` with `camera: false`.
-2. Tell the user it's rolling and to talk. Recording is live; do not call other tools meanwhile.
-3. When they say they're done (they have to tell you in chat — saying "stop" out loud does nothing), call `stop_recording`. It returns the transcript and, when sharing is on, a link that already plays.
+2. Tell the user it's rolling, and to stop with ⌥⇧R or the island's Stop button when they're done.
+3. Call `wait_for_take` straight away. It returns the moment the take stops (however it's stopped) with the transcript and, when sharing is on, a link that already plays, so you have the take as soon as they finish. If it's still rolling at the timeout, call it again. If they'd rather tell you in chat, call `stop_recording` instead.
+
+## Watching a video (feedback, bug repros, demos)
+- When the user hands you a video or audio file, call `understand_video` with its path. One call returns the duration and resolution, the transcript as timestamped sentence lines, and up to 12 key frames (the moments the screen changes) marked into the transcript as ▣n. A 5 min video takes a few seconds.
+- It imports the video as a take and opens it in the editor, so `get_frame` (a closer look at any moment; raise `maxWidth` for small text), `cut_ranges`, `export` and `share` work on it next. Nothing is uploaded.
+- After a take stops, `understand_video` with no path reads the take just recorded, e.g. "record my feedback, then map it out".
+- Mapping out feedback: go through it in order, tie each point to its time and frame, and turn it into concrete items (what's wrong, where, what they want instead).
 
 ## Editing (the take open in the editor)
 - `get_transcript` first: every word has an index `i`. Cuts are by word index.
 - First pass: `cut_fillers`, then `tighten_pauses`.
 - `trim` to cut dead air or a false start at the head, or the "ok, stop" at the tail: `startWord` / `endWord` are the first / last word index to KEEP (or `startMs` / `endMs` on the source clock — they snap to word boundaries unless `exact: true`). `clear: true` removes the trim. It's one undo step, and cuts inside the trimmed parts come back as they were when it's cleared.
 - Then `cut_ranges` with `wordIndices` for false starts, repeated sentences (keep the best/last take of a line), and waffle. Keep the speaker's meaning and voice; never rewrite what they said.
+- `add_clip` appends another take or video file to the open take (or drops it in at `atMs`, optionally just a stretch with `inMs`/`durationMs`); its words join the same transcript, so cuts, trim, export and share cover every clip. `remove` takes a clip back out.
 - `get_frame` (edited time, ms) when visuals matter — e.g. check a cut doesn't land mid-gesture.
+- `set_camera` places and styles the webcam over the screen: corner or x/y, size, shape (circle/rounded/square), aspect (1:1, 4:3, 3:4, 16:9), zoom and pan to reframe, hide it, or remove its background. Check the result with `get_frame`.
+- `set_background` gives the studio look: the screen inset on a soft gradient wallpaper (dusk, ocean, aurora, mint, peach, snow, graphite) with padding, rounded corners and a soft shadow; `enabled: false` goes back to full-frame.
 - Every edit is undoable with `undo` (one step at a time).
 - Word times are force-aligned ~1 s after a take stops; cuts made by index stay correct when they land.
 
