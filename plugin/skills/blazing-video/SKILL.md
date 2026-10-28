@@ -1,11 +1,11 @@
 ---
-name: takes
+name: blazing-video
 description: Record the user's screen, camera and mic with the Blazing Video Mac app, watch any video file (transcript + key frames in one call), edit the take by its transcript (cut words, fillers, pauses), look at frames, and share a link. Use when the user says "record this", "let's do a take", "start/stop recording", "watch this video", hands you an .mp4/.mov path (feedback walkthrough, bug repro), "tidy up / edit my last video", "cut the ums", or "give me a link to it".
 ---
 
 # Blazing Video
 
-Blazing Video is a Mac app: a menu-bar recorder plus a transcript-first editor. Its tools come from the `takes` MCP server on the user's Mac (`127.0.0.1:43120`). If a call fails to connect, ask the user to open Blazing Video (it lives in the menu bar).
+Blazing Video is a Mac app: a menu-bar recorder plus a transcript-first editor. Its tools come from the `blazing-video` MCP server on the user's Mac (`127.0.0.1:43120`). If a call fails to connect, ask the user to open Blazing Video (it lives in the menu bar).
 
 ## Recording
 1. `start_recording` — returns once it is actually rolling. If it returns a camera warning instead, it is NOT recording: tell the user why and offer `start_recording` with `camera: false`.

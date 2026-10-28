@@ -1,0 +1,508 @@
+[
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Start recording"
+  },
+  "description": "Start recording the user's screen, camera and microphone (a small island appears at the bottom of their screen). Returns once it is actually rolling \u2014 or, if the camera can't start, with a cameraWarning and NOT recording: tell the user why and call again (camera:false records without it). Tell the user to talk and to stop with \u2325\u21e7R or the island's Stop; then call wait_for_take so you get the take the moment it ends (or stop_recording if they ask you to stop it).",
+  "inputSchema": {
+   "properties": {
+    "camera": {
+     "description": "Record the webcam (default: the user's last setting).",
+     "type": "boolean"
+    },
+    "microphone": {
+     "type": "boolean"
+    },
+    "systemAudio": {
+     "description": "Also record computer audio.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "name": "start_recording",
+  "title": "Start recording"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Stop recording"
+  },
+  "description": "Stop the recording. Returns the take and its transcript and opens it in the editor, ready for get_transcript / cut_ranges / cut_fillers / tighten_pauses / get_frame / export.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "stop_recording",
+  "title": "Stop recording"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Wait for the take"
+  },
+  "description": "Wait until the take that's rolling stops \u2014 by \u2325\u21e7R, the island's Stop or stop_recording \u2014 and return it the way stop_recording does: opened in the editor, with its transcript and share link. Call it right after start_recording so you have the take the moment it ends. If it's still rolling at the timeout it says so; call it again. With nothing rolling it returns the last take.",
+  "inputSchema": {
+   "properties": {
+    "take": {
+     "description": "A take's base name to wait for (default: the one rolling now).",
+     "type": "string"
+    },
+    "timeoutSeconds": {
+     "description": "How long to wait (default 900, max 3600).",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "name": "wait_for_take"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Recording status"
+  },
+  "description": "Whether the recorder is idle, starting, ready or recording, how long the current take has been rolling, and the last finished take.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "recording_status",
+  "title": "Recording status"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Read the transcript"
+  },
+  "description": "The open take's words with index, text, source startMs/endMs and whether each is cut (trimmed words count as cut), plus the keep ranges, current cuts, the trim and durations.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "get_transcript",
+  "title": "Read the transcript"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Cut words or ranges"
+  },
+  "description": "Cut source-clock time ranges (ms) from the edit \u2014 one undoable step in the app. Optionally cut whole words by index (uses the same word-boundary padding as deleting in the transcript). Set restore=true to un-cut the ranges instead.",
+  "inputSchema": {
+   "properties": {
+    "ranges": {
+     "description": "Source-clock ranges in ms, as [{\"startMs\":1200,\"endMs\":1850}] or [[1200,1850]].",
+     "items": {
+      "oneOf": [
+       {
+        "properties": {
+         "endMs": {
+          "type": "number"
+         },
+         "startMs": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "startMs",
+         "endMs"
+        ],
+        "type": "object"
+       },
+       {
+        "items": {
+         "type": "number"
+        },
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    "restore": {
+     "description": "Un-cut instead of cut.",
+     "type": "boolean"
+    },
+    "wordIndices": {
+     "description": "Word indices from get_transcript to cut.",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "cut_ranges",
+  "title": "Cut words or ranges"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Place and style the webcam"
+  },
+  "description": "Change how the webcam sits on the screen recording (the two are separate tracks, so this is non-destructive and applies to the preview, get_frame, export and share). Omit a field to keep it. position: a corner (top-left, top-right, bottom-left, bottom-right) or x/y (0\u20131, centre of the camera, top-left origin). size: fraction of the frame's shorter edge (0.12\u20130.6; default 0.26). shape: circle, rounded or square (a circle that isn't square is a pill). aspect: the box's width:height \u2014 1:1, 4:3, 3:4 (portrait) or 16:9. zoom: crop into the camera, 1\u20133. panX/panY: which part of the camera shows when cropped, -1\u20261 (left\u2026right, top\u2026bottom; 0 = centred). visible:false hides the camera. removeBackground:true cuts the person out of their background (on-device). Returns the layout.",
+  "inputSchema": {
+   "properties": {
+    "aspect": {
+     "enum": [
+      "1:1",
+      "4:3",
+      "3:4",
+      "16:9"
+     ],
+     "type": "string"
+    },
+    "panX": {
+     "type": "number"
+    },
+    "panY": {
+     "type": "number"
+    },
+    "position": {
+     "enum": [
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right"
+     ],
+     "type": "string"
+    },
+    "removeBackground": {
+     "type": "boolean"
+    },
+    "reset": {
+     "description": "Back to the default bubble (bottom-right circle).",
+     "type": "boolean"
+    },
+    "shape": {
+     "enum": [
+      "circle",
+      "rounded",
+      "square"
+     ],
+     "type": "string"
+    },
+    "size": {
+     "type": "number"
+    },
+    "visible": {
+     "type": "boolean"
+    },
+    "x": {
+     "type": "number"
+    },
+    "y": {
+     "type": "number"
+    },
+    "zoom": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "name": "set_camera",
+  "title": "Place and style the webcam"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Put the video on a wallpaper"
+  },
+  "description": "The studio look: the screen recording inset on a soft gradient wallpaper with rounded corners and a soft shadow; the webcam stays on top (its corners snap inside the screen). Non-destructive; applies to the preview, get_frame, export and share, and becomes the default look for new takes. Omit a field to keep it. enabled:false goes back to the plain full-frame recording. wallpaper: dusk, ocean, aurora, mint, peach, snow or graphite (picking one turns it on). padding: space around the screen as a fraction of the frame's shorter edge, 0\u20130.2 (default 0.07). roundness and shadow: 0\u20131. Returns the look.",
+  "inputSchema": {
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "padding": {
+     "type": "number"
+    },
+    "roundness": {
+     "type": "number"
+    },
+    "shadow": {
+     "type": "number"
+    },
+    "wallpaper": {
+     "enum": [
+      "dusk",
+      "ocean",
+      "aurora",
+      "mint",
+      "peach",
+      "snow",
+      "graphite"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "name": "set_background",
+  "title": "Put the video on a wallpaper"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Trim the start or end"
+  },
+  "description": "Trim the head and/or tail of the take \u2014 where the edit starts and ends \u2014 as one undoable step (like dragging the timeline's end handles). Give startMs/endMs on the SOURCE clock (same as word startMs/endMs; they snap to the nearest word boundary with the usual cut padding unless exact:true), or startWord/endWord: the first/last word index to keep. Omit a side to leave it as it is; clear:true removes the trim. Cuts inside the trimmed parts are kept, so clearing brings back the take as it was edited.",
+  "inputSchema": {
+   "properties": {
+    "clear": {
+     "description": "Remove the trim (applied before startMs/endMs/startWord/endWord).",
+     "type": "boolean"
+    },
+    "endMs": {
+     "description": "Source ms the edit ends at.",
+     "type": "number"
+    },
+    "endWord": {
+     "description": "Last word index to keep (trims everything after it).",
+     "type": "integer"
+    },
+    "exact": {
+     "description": "Use startMs/endMs as given, no snapping to word boundaries.",
+     "type": "boolean"
+    },
+    "startMs": {
+     "description": "Source ms the edit starts at.",
+     "type": "number"
+    },
+    "startWord": {
+     "description": "First word index to keep (trims everything before it).",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "name": "trim",
+  "title": "Trim the start or end"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Look at a frame"
+  },
+  "description": "PNG of the edited video at timeMs on the EDITED clock (after cuts), with the face circle composited.",
+  "inputSchema": {
+   "properties": {
+    "maxWidth": {
+     "description": "Default 1280.",
+     "type": "number"
+    },
+    "timeMs": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "timeMs"
+   ],
+   "type": "object"
+  },
+  "name": "get_frame",
+  "title": "Look at a frame"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Export the video"
+  },
+  "description": "Export the edit to an MP4 in ~/Movies (hardware encode). Returns the path and how long it took. Blocks until done.",
+  "inputSchema": {
+   "properties": {
+    "codec": {
+     "description": "Default: the app's current choice (HEVC).",
+     "enum": [
+      "h264",
+      "hevc"
+     ],
+     "type": "string"
+    },
+    "engine": {
+     "description": "writer (default, fast HW pipeline) or session (AVAssetExportSession, for comparison).",
+     "enum": [
+      "writer",
+      "session"
+     ],
+     "type": "string"
+    },
+    "fps": {
+     "description": "Frame-rate cap. Default: the app's setting (30).",
+     "enum": [
+      30,
+      60
+     ],
+     "type": "integer"
+    },
+    "height": {
+     "description": "Output height, e.g. 1080. 0 or omitted = the app's setting (native by default).",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "name": "export",
+  "title": "Export the video"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Cut filler words"
+  },
+  "description": "Cut every um/uh-style filler word (one undo step).",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "cut_fillers",
+  "title": "Cut filler words"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Tighten pauses"
+  },
+  "description": "Trim every pause over 0.4 s between kept words down to 0.15 s (one undo step).",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "tighten_pauses",
+  "title": "Tighten pauses"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Undo the last edit"
+  },
+  "description": "Undo the last edit.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "undo",
+  "title": "Undo the last edit"
+ },
+ {
+  "annotations": {
+   "destructiveHint": true,
+   "idempotentHint": false,
+   "openWorldHint": true,
+   "readOnlyHint": false,
+   "title": "Share a link"
+  },
+  "description": "Get a share link for the current edit (on the user's Cloudflare). The link is created and copied to the clipboard at once; the video exports and uploads behind it (the page shows progress, then plays). If the take was shared before, this updates the SAME link with the current edit. wait:true returns only once the link plays.",
+  "inputSchema": {
+   "properties": {
+    "wait": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "name": "share",
+  "title": "Share a link"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Open a take"
+  },
+  "description": "Open a take in the editor by path: a take's <base>.mov (or any sidecar), or ANY video file (.mp4/.mov/.m4v \u2014 a download, a screen recording from another app), which is imported as a take (an instant APFS clone in the Recordings folder, not a copy) and transcribed on device first (~3 s for 5 min), so get_transcript / cut_ranges / get_frame / export / share work on it. Fails if the path can't be opened. Without a path, opens the newest take. To read what a video says and shows, use understand_video instead.",
+  "inputSchema": {
+   "properties": {
+    "path": {
+     "description": "Absolute path (~ is fine).",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "name": "open_take",
+  "title": "Open a take"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Watch a video"
+  },
+  "description": "Read a whole video in one call: when the user hands you a video or audio file (a feedback walkthrough, a bug repro, a demo, a meeting) or asks what a take says or shows. Returns its duration, resolution, a timestamped transcript in sentence lines (on-device Parakeet, a 5 min video in a few seconds) and up to maxFrames key frames where the picture changes, as images marked into the transcript (\u25a3n) so you can tie what was said to what was on screen. A video file that isn't a take is imported (instant clone, transcript cached for next time) and opened in the editor, so get_frame for a closer look at any moment, cut_ranges, export and share then work on it. Without a path, reads the take open in the editor (e.g. right after stop_recording). Audio files get the transcript only.",
+  "inputSchema": {
+   "properties": {
+    "frameWidth": {
+     "description": "Key frame width in px, 320\u20131568 (default 1024; raise it to read small on-screen text, or get_frame one moment).",
+     "type": "integer"
+    },
+    "maxFrames": {
+     "description": "Key frames to attach, 0\u201330 (default 12). 0 for the transcript only.",
+     "type": "integer"
+    },
+    "open": {
+     "description": "Open it in the editor (default true).",
+     "type": "boolean"
+    },
+    "path": {
+     "description": "Absolute path to a .mp4/.mov/.m4v (or .m4a/.mp3/.wav\u2026). Omit for the open take.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "name": "understand_video",
+  "title": "Watch a video"
+ }
+]

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.blazingvideo/blazing-video",
+  "title": "Blazing Video",
+  "description": "Record your Mac screen, face and voice, edit the video by its transcript, and share a link.",
+  "version": "0.2.0",
+  "websiteUrl": "https://blazingvideo.com/mcp",
+  "repository": {
+    "url": "https://github.com/acstener/takes-plugin",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://blazingvideo.com/apple-touch-icon.png",
+      "mimeType": "image/png",
+      "sizes": ["180x180"]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/acstener/takes-plugin/releases/download/v0.2.0/blazing-video.mcpb",
+      "fileSha256": "SET_BY_RELEASE",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}
