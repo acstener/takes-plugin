@@ -1,9 +1,11 @@
 {
   "mcpServers": {
-    "takes": {
+    "blazing-video": {
       "type": "http",
       "url": "http://127.0.0.1:43120/mcp",
-      "headers": { "X-Takes": "1" }
+      "headers": {
+        "X-Takes": "1"
+      }
     }
   }
 }

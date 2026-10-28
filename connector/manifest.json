@@ -1,0 +1,42 @@
+{
+  "manifest_version": "0.2",
+  "name": "blazing-video",
+  "display_name": "Blazing Video",
+  "version": "0.1.0",
+  "description": "Record your screen, face and voice on your Mac, edit the video by its transcript, and share a link — from Claude.",
+  "long_description": "Connects Claude to the Blazing Video Mac app. Ask Claude to start and stop a recording, read the transcript, cut filler words, pauses and false starts, trim the start and end, look at frames, export an MP4 and share or update a link that plays instantly. Recording and transcription happen on your Mac; the connector talks only to the Blazing Video app on this Mac (127.0.0.1). Needs Blazing Video installed and running (macOS 15 or later): https://blazingvideo.com/download",
+  "author": {
+    "name": "Alex Christou",
+    "url": "https://github.com/acstener"
+  },
+  "homepage": "https://blazingvideo.com",
+  "support": "https://github.com/acstener/takes-plugin/issues",
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {}
+    }
+  },
+  "keywords": [
+    "video",
+    "screen recording",
+    "transcript",
+    "editing",
+    "loom"
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin"
+    ],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "license": "MIT"
+}

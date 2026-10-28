@@ -12,7 +12,7 @@ transcript, and share a link, all from Claude Code.
 
    ```
    /plugin marketplace add acstener/takes-plugin
-   /plugin install takes@takes
+   /plugin install blazing-video@takes
    ```
 
 3. With Blazing Video running, say "record this", "cut the ums", or "give me
@@ -20,17 +20,17 @@ transcript, and share a link, all from Claude Code.
 
 The plugin adds two things:
 
-- **The `takes` MCP server**: an HTTP connection to the app's local server at
+- **The `blazing-video` MCP server**: an HTTP connection to the app's local server at
   `http://127.0.0.1:43120/mcp` (header `X-Takes: 1`). It only answers on your
   Mac and refuses browser requests. If Claude says it can't connect, open
   Blazing Video.
-- **The `takes` skill**: tells Claude the record → edit → share workflow, so
+- **The `blazing-video` skill**: tells Claude the record → edit → share workflow, so
   plain requests like "tidy up my last video" work.
 
 Without the plugin you can add the server yourself:
 
 ```
-claude mcp add --transport http --scope user takes http://127.0.0.1:43120/mcp --header "X-Takes: 1"
+claude mcp add --transport http --scope user blazing-video http://127.0.0.1:43120/mcp --header "X-Takes: 1"
 ```
 
 Using the Claude desktop app instead? Choose **Connect to Claude App…** in

@@ -1,6 +1,6 @@
 {
-  "name": "takes",
-  "version": "0.1.0",
+  "name": "blazing-video",
+  "version": "0.2.0",
   "description": "Record your screen, face and voice, edit the video by its transcript, and share a link — from Claude. Needs the Blazing Video app running on your Mac.",
   "author": {
     "name": "Alex Christou",
@@ -10,8 +10,12 @@
   "keywords": [
     "video",
     "screen-recording",
+    "screen-recorder",
     "editing",
     "transcript",
-    "loom"
-  ]
+    "loom-alternative",
+    "mac"
+  ],
+  "repository": "https://github.com/acstener/takes-plugin",
+  "license": "MIT"
 }
