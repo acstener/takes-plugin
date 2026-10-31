@@ -276,6 +276,167 @@
    "idempotentHint": true,
    "openWorldHint": false,
    "readOnlyHint": false,
+   "title": "Add animated captions"
+  },
+  "description": "Captions burned into the video, timed to every kept word (cut words never show), with spring animations. Non-destructive; applies to the preview, get_frame, export and share. Omit a field to keep it. style: a look \u2014 clean (soft sentence captions, spoken words brighten), subtitles (plain lines on a dark box), bold-pop (Hormozi caps, yellow current word, pops in), beast (chunky outlined caps, tilted), karaoke (grey fills to yellow as spoken), word-box (lime pill glides word to word), one-word (one big word at a time), marker (highlighter bar under the current word), typewriter (letters type on), keynote (clean phrases rise in), serif (elegant serif fades in). Picking one turns captions on. customStyle: fields to change on the look (any of CaptionStyle: fonts [PostScript names], weight, textCase as-spoken|upper|lower, stripPunctuation, size (% of frame height), wordsPerLine, maxLines, maxCharsPerLine, fill/highlightFill/highlightText/emphasisFill (#RRGGBB or #RRGGBBAA), stroke {color,width}, shadow {color,blur,y}, background/wordBox {color,radius,padX,padY}, y (0\u20131), reveal chunk|word|letter, entrance none|fade|pop|rise|slam, entranceMs, highlight none|color|karaoke|box|marker, activeScale, tiltDeg, holdMs, pauseBreakMs, exitMs, emphasisScale, autoEmphasis, name). size: 0.5\u20132\u00d7 the look's own size. position: top, middle or bottom (centred), or x/y for anywhere. textColor / highlightColor (#RRGGBB) and box on|off|auto are the simple controls from the Captions tab, kept across looks. boxWidth (share of the frame width, 0.05\u20130.96) and boxLines (1\u20134) size the captions' box: the text stays the set size and as many words show as fit (small box = one word at a time, wide 1-line box = one line); 0 = the look's own. words: style single words by transcript index, e.g. [{\"index\":12,\"emphasis\":true,\"color\":\"#FFE500\"}] (emphasis = bigger, in the emphasis colour; emphasis:false + no color clears). clearWords:true removes every word style. enabled:false hides captions. Returns the settings; check with get_frame at a word's edited time.",
+  "inputSchema": {
+   "properties": {
+    "box": {
+     "description": "A dark box behind the lines (auto = the look's own).",
+     "enum": [
+      "on",
+      "off",
+      "auto"
+     ],
+     "type": "string"
+    },
+    "boxLines": {
+     "description": "How many lines tall the box is (1\u20134). 0 = the look's own.",
+     "type": "integer"
+    },
+    "boxWidth": {
+     "description": "The captions' box width, share of the frame width (0.05\u20130.96). Text never shrinks: words wrap to it. 0 = the look's own.",
+     "type": "number"
+    },
+    "clearHidden": {
+     "description": "Show captions everywhere again.",
+     "type": "boolean"
+    },
+    "clearWords": {
+     "type": "boolean"
+    },
+    "customStyle": {
+     "description": "CaptionStyle fields to change (see description).",
+     "type": "object"
+    },
+    "enabled": {
+     "type": "boolean"
+    },
+    "hide": {
+     "description": "Stretches with no captions, e.g. under a title that says the same words: [{\"startWord\":100,\"endWord\":105}] or [{\"startMs\":24900,\"endMs\":26600}] (source clock). Added to any already hidden.",
+     "items": {
+      "properties": {
+       "endMs": {
+        "type": "number"
+       },
+       "endWord": {
+        "type": "integer"
+       },
+       "startMs": {
+        "type": "number"
+       },
+       "startWord": {
+        "type": "integer"
+       }
+      },
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "highlightColor": {
+     "description": "Colour of the word being spoken / its box or bar / popped words, #RRGGBB; \"\" = the look's.",
+     "type": "string"
+    },
+    "position": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ],
+     "type": "string"
+    },
+    "size": {
+     "type": "number"
+    },
+    "style": {
+     "enum": [
+      "clean",
+      "subtitles",
+      "bold-pop",
+      "beast",
+      "karaoke",
+      "word-box",
+      "one-word",
+      "marker",
+      "typewriter",
+      "keynote",
+      "serif"
+     ],
+     "type": "string"
+    },
+    "textColor": {
+     "description": "Colour of the words, #RRGGBB, over the look's own (kept when the look changes); \"\" = the look's.",
+     "type": "string"
+    },
+    "words": {
+     "items": {
+      "properties": {
+       "color": {
+        "type": "string"
+       },
+       "emphasis": {
+        "type": "boolean"
+       },
+       "index": {
+        "type": "integer"
+       }
+      },
+      "required": [
+       "index"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "x": {
+     "description": "Centre of the captions, 0\u20131 from the left (free placement; kept inside the frame).",
+     "type": "number"
+    },
+    "y": {
+     "description": "Centre of the captions, 0\u20131 from the top.",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "name": "set_captions",
+  "title": "Add animated captions"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Save a subtitles file"
+  },
+  "description": "Write the edit's subtitles (.srt or .vtt), timed to the EDITED video (cut words left out), to ~/Movies/Blazing Video/<take>.<format> or path. For players and uploads (YouTube) that want a separate file; burned-in captions are set_captions. Returns the path and the text.",
+  "inputSchema": {
+   "properties": {
+    "format": {
+     "description": "Default srt.",
+     "enum": [
+      "srt",
+      "vtt"
+     ],
+     "type": "string"
+    },
+    "path": {
+     "description": "Where to write it (~ is fine). Optional.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "name": "save_subtitles",
+  "title": "Save a subtitles file"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
    "title": "Trim the start or end"
   },
   "description": "Trim the head and/or tail of the take \u2014 where the edit starts and ends \u2014 as one undoable step (like dragging the timeline's end handles). Give startMs/endMs on the SOURCE clock (same as word startMs/endMs; they snap to the nearest word boundary with the usual cut padding unless exact:true), or startWord/endWord: the first/last word index to keep. Omit a side to leave it as it is; clear:true removes the trim. Cuts inside the trimmed parts are kept, so clearing brings back the take as it was edited.",
@@ -346,7 +507,7 @@
    "readOnlyHint": false,
    "title": "Export the video"
   },
-  "description": "Export the edit to an MP4 in ~/Movies (hardware encode). Returns the path and how long it took. Blocks until done.",
+  "description": "Export the edit to an MP4 in ~/Movies/Blazing Video (hardware encode). Returns the path and how long it took. Blocks until done.",
   "inputSchema": {
    "properties": {
     "codec": {
@@ -374,7 +535,7 @@
      "type": "integer"
     },
     "height": {
-     "description": "Output height, e.g. 1080. 0 or omitted = the app's setting (native by default).",
+     "description": "The short side, e.g. 1080 (a vertical edit comes out 1080\u00d71920; small recordings scale up). 0 or omitted = the app's setting (native, with anything under 1080p raised to 1080p).",
      "type": "integer"
     }
    },
@@ -407,13 +568,89 @@
    "readOnlyHint": false,
    "title": "Tighten pauses"
   },
-  "description": "Trim every pause over 0.4 s between kept words down to 0.15 s (one undo step).",
+  "description": "Shorten every pause between kept words (and at the head and tail) that's longer than overMs down to toMs (one undo step). Left out, both use the user's Cut Pauses settings (default 400 \u2192 150 ms).",
   "inputSchema": {
-   "properties": {},
+   "properties": {
+    "overMs": {
+     "description": "Only gaps longer than this many ms. Default: the user's setting (400).",
+     "type": "number"
+    },
+    "toMs": {
+     "description": "Shorten each to this many ms. Default: the user's setting (150).",
+     "type": "number"
+    }
+   },
    "type": "object"
   },
   "name": "tighten_pauses",
   "title": "Tighten pauses"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Remove retakes"
+  },
+  "description": "The app's retake detector: lines said again (stutters, abandoned starts, a sentence said twice). Returns each earlier attempt (cut word indices) and the take that replaces it. dryRun=true only lists them; otherwise every attempt is cut, keeping the last take (one undo step). To keep a different take, use cut_ranges instead.",
+  "inputSchema": {
+   "properties": {
+    "dryRun": {
+     "description": "List the retakes without cutting.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "name": "remove_retakes",
+  "title": "Remove retakes"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Studio Sound"
+  },
+  "description": "Turn Studio Sound (on-device voice cleanup: background noise and echo removed, voice levelled) on or off for the open take. The first time it processes the mic in the background (a few seconds per minute of audio).",
+  "inputSchema": {
+   "properties": {
+    "on": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "on"
+   ],
+   "type": "object"
+  },
+  "name": "studio_sound",
+  "title": "Studio Sound"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": true,
+   "readOnlyHint": false,
+   "title": "Eye Contact"
+  },
+  "description": "Turn Eye Contact on or off for the open take: the webcam re-rendered so the speaker looks into the lens. The first time it uploads the webcam video only (no screen, no sound) to NVIDIA's Maxine Eye Contact model and processes it in the background; the result is cached beside the take, so later toggles are instant. Needs a camera and the user's NVIDIA key (pasted once in the AI tools tab). Returns on, processing and hasKey.",
+  "inputSchema": {
+   "properties": {
+    "on": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "on"
+   ],
+   "type": "object"
+  },
+  "name": "eye_contact",
+  "title": "Eye Contact"
  },
  {
   "annotations": {
@@ -475,12 +712,55 @@
  {
   "annotations": {
    "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Add a clip"
+  },
+  "description": "Add a video onto the end of the open take (or at atMs, a stretch of it with inMs/durationMs): another take's <base>.mov, or any .mp4/.mov/.m4v (imported and transcribed first). The edit so far is kept; the words carry on after the open take's, on one clock, so get_transcript / cut_ranges / trim / export / share cover every clip. With remove, takes that clip back out instead.",
+  "inputSchema": {
+   "properties": {
+    "atMs": {
+     "description": "Put it in here (source clock, as get_transcript's word times) instead of on the end; the clip there is split around it.",
+     "type": "number"
+    },
+    "durationMs": {
+     "description": "\u2026and this long.",
+     "type": "number"
+    },
+    "inMs": {
+     "description": "Use only part of the video: start this far in\u2026",
+     "type": "number"
+    },
+    "path": {
+     "description": "Absolute path to the video to add (~ is fine).",
+     "type": "string"
+    },
+    "remove": {
+     "description": "Instead: the base name of a clip to take out.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "name": "add_clip",
+  "title": "Add a clip"
+ },
+ {
+  "_meta": {
+   "ui": {
+    "resourceUri": "ui://blazing-video/watch.html"
+   },
+   "ui/resourceUri": "ui://blazing-video/watch.html"
+  },
+  "annotations": {
+   "destructiveHint": false,
    "idempotentHint": true,
    "openWorldHint": false,
    "readOnlyHint": false,
    "title": "Watch a video"
   },
-  "description": "Read a whole video in one call: when the user hands you a video or audio file (a feedback walkthrough, a bug repro, a demo, a meeting) or asks what a take says or shows. Returns its duration, resolution, a timestamped transcript in sentence lines (on-device Parakeet, a 5 min video in a few seconds) and up to maxFrames key frames where the picture changes, as images marked into the transcript (\u25a3n) so you can tie what was said to what was on screen. A video file that isn't a take is imported (instant clone, transcript cached for next time) and opened in the editor, so get_frame for a closer look at any moment, cut_ranges, export and share then work on it. Without a path, reads the take open in the editor (e.g. right after stop_recording). Audio files get the transcript only.",
+  "description": "Read a whole video in one call: when the user hands you a video or audio file (a feedback walkthrough, a bug repro, a demo, a meeting) or asks what a take says or shows. Returns its duration, resolution, a timestamped transcript in sentence lines (on-device Parakeet, a 5 min video in a few seconds), a list of moments (one per point the speaker makes, framed at the word that points: \"here\", \"this\") each with a frame (\u25a3n) and, when the take logged the mouse, a sharp close-up around the pointer (\u25cen), plus frames where the picture changes, up to maxFrames. Read it yourself in this one call (no subagents needed) and answer with the table it asks for. The moments also show as cards beside the chat. A video file that isn't a take is imported (instant clone, transcript cached for next time) and opened in the editor, so get_frame for a closer look at any moment, cut_ranges, export and share then work on it. Without a path, reads the take open in the editor (e.g. right after stop_recording). Audio files get the transcript only.",
   "inputSchema": {
    "properties": {
     "frameWidth": {
@@ -504,5 +784,946 @@
   },
   "name": "understand_video",
   "title": "Watch a video"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Read the motion"
+  },
+  "description": "The take's motion: zooms and text elements (source clock, like word times), the text presets with their looks, the enter/exit animations, the mouse clicks in the recording (source ms, x/y 0\u20131 of the screen, top-left origin) and where the webcam bubble sits (0\u20131 of the frame) so text can stay clear of it.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "get_motion",
+  "title": "Read the motion"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Add zooms and text"
+  },
+  "description": "Add camera zooms on the screen recording and animated text over the video, all in one undoable step; they show live in the preview, get_frame, export and share. Time each element with startWord/endWord (word indexes from get_transcript: text starts just before the word and holds a beat after endWord; a zoom moves in just before startWord and eases out after endWord) or startMs/endMs on the source clock. An element with an existing id replaces it. clear:true removes all motion first (use it when applying a whole style). Zooms: scale 1.05\u20133 (1.4\u20131.8 for UI, 1.1\u20131.2 for a punch-in), x/y the point to zoom on (0\u20131, top-left origin; omit them to aim at the first click inside the zoom, else the centre), rampMs the ease in/out (0 = hard punch-in; default 650), follow:true to have the camera glide with the mouse while zoomed in (Screen Studio style; it starts on x/y; default true when the take has a mouse log and no x/y is given), autoZoom:true (top level) to first add zooms on every burst of clicks, following the mouse. Texts: text (wrap a word in *asterisks* for the accent colour), preset (title, kinetic, lower-third, callout, big-number, label, chapter; default title) and any look field to override it: font, weight (100\u2013900), sizePct (capital-letter height, % of the frame's shorter side; it shrinks to fit so a word never breaks), fill/accent/box/stroke (#RRGGBB or #RRGGBBAA; box/stroke \"none\" to drop), radius, shadow (none/soft/hard), uppercase, x/y (0\u20131, top-left origin), align (left/center/right: which edge x is), widthPct, float, tracking; enter (none, pop, rise, blur, typewriter, wipe, fade) and exit (cut, fade, pop, lift).",
+  "inputSchema": {
+   "properties": {
+    "autoZoom": {
+     "description": "First add zooms on every burst of clicks (replacing earlier click zooms), each following the mouse.",
+     "type": "boolean"
+    },
+    "clear": {
+     "description": "Remove all motion first.",
+     "type": "boolean"
+    },
+    "style": {
+     "description": "The motion style id being applied (shown in the app).",
+     "type": "string"
+    },
+    "texts": {
+     "items": {
+      "properties": {
+       "accent": {
+        "type": "string"
+       },
+       "align": {
+        "enum": [
+         "left",
+         "center",
+         "right"
+        ],
+        "type": "string"
+       },
+       "box": {
+        "type": "string"
+       },
+       "endMs": {
+        "type": "number"
+       },
+       "endWord": {
+        "type": "integer"
+       },
+       "enter": {
+        "enum": [
+         "none",
+         "pop",
+         "rise",
+         "blur",
+         "typewriter",
+         "wipe",
+         "fade"
+        ],
+        "type": "string"
+       },
+       "exit": {
+        "enum": [
+         "cut",
+         "fade",
+         "pop",
+         "lift"
+        ],
+        "type": "string"
+       },
+       "fill": {
+        "type": "string"
+       },
+       "float": {
+        "type": "boolean"
+       },
+       "font": {
+        "type": "string"
+       },
+       "id": {
+        "type": "string"
+       },
+       "preset": {
+        "enum": [
+         "big-number",
+         "callout",
+         "chapter",
+         "kinetic",
+         "label",
+         "lower-third",
+         "title"
+        ],
+        "type": "string"
+       },
+       "radius": {
+        "type": "number"
+       },
+       "shadow": {
+        "enum": [
+         "none",
+         "soft",
+         "hard"
+        ],
+        "type": "string"
+       },
+       "sizePct": {
+        "type": "number"
+       },
+       "startMs": {
+        "type": "number"
+       },
+       "startWord": {
+        "type": "integer"
+       },
+       "stroke": {
+        "type": "string"
+       },
+       "text": {
+        "type": "string"
+       },
+       "tracking": {
+        "type": "number"
+       },
+       "uppercase": {
+        "type": "boolean"
+       },
+       "weight": {
+        "type": "number"
+       },
+       "widthPct": {
+        "type": "number"
+       },
+       "x": {
+        "type": "number"
+       },
+       "y": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "text"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    },
+    "zooms": {
+     "items": {
+      "properties": {
+       "endMs": {
+        "type": "number"
+       },
+       "endWord": {
+        "type": "integer"
+       },
+       "follow": {
+        "type": "boolean"
+       },
+       "id": {
+        "type": "string"
+       },
+       "rampMs": {
+        "type": "number"
+       },
+       "scale": {
+        "type": "number"
+       },
+       "startMs": {
+        "type": "number"
+       },
+       "startWord": {
+        "type": "integer"
+       },
+       "x": {
+        "type": "number"
+       },
+       "y": {
+        "type": "number"
+       }
+      },
+      "type": "object"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "add_motion",
+  "title": "Add zooms and text"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Remove zooms or text"
+  },
+  "description": "Remove zooms or text elements by id, or all motion with all:true (one undoable step).",
+  "inputSchema": {
+   "properties": {
+    "all": {
+     "type": "boolean"
+    },
+    "ids": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "remove_motion",
+  "title": "Remove zooms or text"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "List motion styles"
+  },
+  "description": "The motion styles the app offers (each a brief plus style-bank recipes). get_motion_style gives one in full; apply it with cuts and add_motion.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "list_motion_styles",
+  "title": "List motion styles"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Read a motion style"
+  },
+  "description": "One motion style in full: the brief, the house rules and the style-bank recipes (text looks, animation timings, pacing, zooms) to follow when applying it.",
+  "inputSchema": {
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ],
+   "type": "object"
+  },
+  "name": "get_motion_style",
+  "title": "Read a motion style"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Fix mis-heard words"
+  },
+  "description": "Change what words say (a mis-heard name, a typo) without touching their timing: captions, subtitles and get_transcript (as fixedText) use the new text; the recording is unchanged. One undo step. words: [{\"index\":38,\"text\":\"Claude\"}] by transcript index; text \"\" puts the original back. For a phrase heard as several words, fix each one (\"claw\" \u2192 \"Claude\", \"code\" \u2192 \"Code\").",
+  "inputSchema": {
+   "properties": {
+    "words": {
+     "items": {
+      "properties": {
+       "index": {
+        "type": "integer"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "index",
+       "text"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "words"
+   ],
+   "type": "object"
+  },
+  "name": "fix_words",
+  "title": "Fix mis-heard words"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Zoom on every cut"
+  },
+  "description": "The talking-head jump-cut look: every kept stretch between cuts gets its own framing, alternating wide and punched-in, so jump cuts read as deliberate. Aimed at the speaker's face (found on device) on a face-only take, or at each shot's clicks (else the centre) on a screen recording with a webcam bubble, unless x/y are given. Replaces earlier cut zooms (ids cut-N), keeps other zooms; call again after changing cuts. strength: how far the punch-in goes (1.05\u20131.4, default 1.14). minMs: shots shorter than this keep the previous framing (default 400). Returns the zooms.",
+  "inputSchema": {
+   "properties": {
+    "minMs": {
+     "type": "number"
+    },
+    "remove": {
+     "description": "Take the cut zooms out instead.",
+     "type": "boolean"
+    },
+    "strength": {
+     "type": "number"
+    },
+    "x": {
+     "type": "number"
+    },
+    "y": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "name": "cut_zooms",
+  "title": "Zoom on every cut"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Look at several frames"
+  },
+  "description": "A contact sheet of the edit: frames at EDITED times side by side in one image (left to right, top to bottom), with everything composited (zooms, text, captions, camera, background). Use it to review a whole edit in one look, and to check every graphic: pass timesMs, or count for evenly spaced frames (default 8, max 24). cellWidth: px per frame (default 360).",
+  "inputSchema": {
+   "properties": {
+    "cellWidth": {
+     "type": "number"
+    },
+    "count": {
+     "type": "integer"
+    },
+    "timesMs": {
+     "items": {
+      "type": "number"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "get_frames",
+  "title": "Look at several frames"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Where things sit on screen"
+  },
+  "description": "At an EDITED time: the frame size, the speaker's face box (found on device), the text elements on screen with their boxes, the captions' block, and the zoom, all as 0\u20131 of the frame with a top-left origin. Use it to keep text and captions clear of the face and inside the frame.",
+  "inputSchema": {
+   "properties": {
+    "timeMs": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "timeMs"
+   ],
+   "type": "object"
+  },
+  "name": "get_layout",
+  "title": "Where things sit on screen"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Check the edit"
+  },
+  "description": "Review the whole edit for common problems before finishing: text or captions over the face or running off the frame, leftover fillers, long pauses and retakes, jump cuts with no framing change, and audio layers too loud against the voice. Returns a list of issues with edited times and a suggested fix each; empty means it's clean. Still look at it with get_frames.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "check_edit",
+  "title": "Check the edit"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "List music and sound effects"
+  },
+  "description": "The built-in music beds and sound effects (ids, what each is for, length) and the music and effects on the take now (source-clock times). Any audio file on the Mac also works: give add_audio its path (e.g. one you made with ffmpeg in your scratch folder).",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "list_sounds",
+  "title": "List music and sound effects"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Add music and sound effects"
+  },
+  "description": "Put music and sound effects under the take's own audio, in one undo step; heard in the preview, export and share. Times follow the words, so they stay put when cuts change. music: {sound (a list_sounds id or an audio file path), volume 0\u20131 (default 0.15: a bed well under the voice), startWord/endWord or startMs/endMs (default the whole edit), fadeInMs (default 800), fadeOutMs (default 1500), duck (default true: dips under speech, rises in gaps), id}. Only one music bed plays at a time unless you give different ids and stretches. sfx: [{sound, atWord (lands as that word starts) or atMs (source clock), offsetMs (e.g. -300 to lead into the word), volume 0\u20131 (default 0.5), id}]. clear:true removes all music and effects first. An existing id is replaced. Returns the layers.",
+  "inputSchema": {
+   "properties": {
+    "clear": {
+     "type": "boolean"
+    },
+    "music": {
+     "properties": {
+      "duck": {
+       "type": "boolean"
+      },
+      "endMs": {
+       "type": "number"
+      },
+      "endWord": {
+       "type": "integer"
+      },
+      "fadeInMs": {
+       "type": "number"
+      },
+      "fadeOutMs": {
+       "type": "number"
+      },
+      "id": {
+       "type": "string"
+      },
+      "sound": {
+       "type": "string"
+      },
+      "startMs": {
+       "type": "number"
+      },
+      "startWord": {
+       "type": "integer"
+      },
+      "volume": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "sound"
+     ],
+     "type": "object"
+    },
+    "sfx": {
+     "items": {
+      "properties": {
+       "atMs": {
+        "type": "number"
+       },
+       "atWord": {
+        "type": "integer"
+       },
+       "id": {
+        "type": "string"
+       },
+       "offsetMs": {
+        "type": "number"
+       },
+       "sound": {
+        "type": "string"
+       },
+       "volume": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "sound"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "add_audio",
+  "title": "Add music and sound effects"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Remove music or sound effects"
+  },
+  "description": "Remove music or sound effects by id, or all of them with all:true (one undo step).",
+  "inputSchema": {
+   "properties": {
+    "all": {
+     "type": "boolean"
+    },
+    "ids": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "remove_audio",
+  "title": "Remove music or sound effects"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Colour grade the footage"
+  },
+  "description": "The footage's colour: on the recording and the camera, not on the background, text or captions; live in the preview, get_frame, export and share; one undo step. preset: natural, clean, punchy, warm, cool, moody, film or mono (a starting point; fields given alongside adjust it). Or set fields: contrast 0.5\u20131.6 (1 = as recorded), saturation 0\u20132 (1), brightness -0.3\u20130.3 (0), warmth -1 cool \u2026 1 warm (0), vignette 0\u20131 (0; 0.2\u20130.4 frames a face nicely). Omit a field to keep it; reset:true back to natural. Check with get_frame. Returns the look.",
+  "inputSchema": {
+   "properties": {
+    "brightness": {
+     "type": "number"
+    },
+    "contrast": {
+     "type": "number"
+    },
+    "preset": {
+     "enum": [
+      "clean",
+      "cool",
+      "film",
+      "mono",
+      "moody",
+      "natural",
+      "punchy",
+      "warm"
+     ],
+     "type": "string"
+    },
+    "reset": {
+     "type": "boolean"
+    },
+    "saturation": {
+     "type": "number"
+    },
+    "vignette": {
+     "type": "number"
+    },
+    "warmth": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "name": "set_look",
+  "title": "Colour grade the footage"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "See the editor"
+  },
+  "description": "A picture of the editor window as the user sees it: the transcript (cut words struck through), the preview, the timeline with its lanes (text and zooms, captions, music, effects) and the open panel. Use it to see what the user sees, or to check your changes landed where you meant on the timeline.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "get_editor_view",
+  "title": "See the editor"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Make an animated graphic"
+  },
+  "description": "Design an animated graphic in HTML/CSS (SVG, icons, gradients, any layout; web fonts load) and render it to transparent frames for add_graphic. The page is a fixed canvas of width\u00d7height CSS px with a transparent background. Animate with CSS @keyframes/transitions and animation-delay (time 0 = when the graphic appears), or define window.frame = (ms) => {\u2026} to draw each moment yourself. Time a part to a word by delay = that word's start minus the graphic's start (both source ms). Keep it clean: one idea per graphic, big readable type (\u2265 36px at 1080 wide), entrances under 300 ms. Returns the frames folder (give it to add_graphic) and a contact sheet of 6 moments over grey, to check it. Re-render with the same name to revise.",
+  "inputSchema": {
+   "properties": {
+    "durationMs": {
+     "description": "How long it runs (default 3000); the last frame holds if it's shown longer.",
+     "type": "number"
+    },
+    "fps": {
+     "description": "Frames a second (default 30).",
+     "type": "number"
+    },
+    "height": {
+     "description": "Canvas height in CSS px (default 560).",
+     "type": "integer"
+    },
+    "html": {
+     "description": "A full HTML document or a body fragment.",
+     "type": "string"
+    },
+    "name": {
+     "description": "A short name (letters, digits, -), e.g. flow-diagram.",
+     "type": "string"
+    },
+    "width": {
+     "description": "Canvas width in CSS px (default 1000).",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "html",
+    "name"
+   ],
+   "type": "object"
+  },
+  "name": "render_graphic",
+  "title": "Make an animated graphic"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "Graphic starting points"
+  },
+  "description": "Ready-made explainer graphics in the house look (checklist that ticks, steps flow, badge, speech bubble, end title) as HTML for render_graphic, with their canvas size and length. Change the words, each part's animation-delay (its word's start minus the graphic's start, in seconds) and the look, then render. Give id for one template's HTML; without it, the list.",
+  "inputSchema": {
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "name": "graphic_templates",
+  "title": "Graphic starting points"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Put a graphic on the video"
+  },
+  "description": "Show a graphic over the video, one undo step; live in the preview, get_frame, export and share, and on the timeline's Graphics lane. source: a render_graphic folder, a PNG/JPEG, or a video with alpha (ProRes 4444 / HEVC with alpha; its frames are extracted). Time it with startWord/endWord (it appears just before startWord and holds a beat after endWord) or startMs/endMs (source clock); it follows the words when cuts change. x/y: its centre, 0\u20131 of the frame (top-left origin; default 0.5, 0.22). width: fraction of the frame width (default 0.86). fadeMs: fade in/out (default 120). An existing id is replaced. Keep it clear of the face (get_layout) and check with get_frames.",
+  "inputSchema": {
+   "properties": {
+    "endMs": {
+     "type": "number"
+    },
+    "endWord": {
+     "type": "integer"
+    },
+    "fadeMs": {
+     "type": "number"
+    },
+    "id": {
+     "type": "string"
+    },
+    "source": {
+     "type": "string"
+    },
+    "startMs": {
+     "type": "number"
+    },
+    "startWord": {
+     "type": "integer"
+    },
+    "width": {
+     "type": "number"
+    },
+    "x": {
+     "type": "number"
+    },
+    "y": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "source"
+   ],
+   "type": "object"
+  },
+  "name": "add_graphic",
+  "title": "Put a graphic on the video"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Remove graphics"
+  },
+  "description": "Remove graphics by id, or all with all:true (one undo step).",
+  "inputSchema": {
+   "properties": {
+    "all": {
+     "type": "boolean"
+    },
+    "ids": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "name": "remove_graphic",
+  "title": "Remove graphics"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false,
+   "readOnlyHint": true,
+   "title": "List what's on the timeline"
+  },
+  "description": "Every layer on the timeline, in its lane order (zooms, media, titles, then music and effects), each with id, kind (text, media, zoom, music, sfx), startMs/endMs (source clock) and editedStartMs/editedEndMs (after cuts), what it says or shows, and where it sits (x/y 0\u20131 of the frame, top-left origin; size). A graphic made with render_graphic carries its recipe (the HTML and render settings) so it can be revised and re-rendered. Also `canvas`: the screen recording (id \"screen\": x/y its centre, 0\u20131 of the frame; scale, 1 = the whole recording fitted in the frame, more crops past the edges; fills = whether it covers the frame) and the camera (id \"camera\": x/y, size) as they sit in the current frame shape, whether captions are on, and which layer the user has picked. Change any of them with edit_layer.",
+  "inputSchema": {
+   "properties": {},
+   "type": "object"
+  },
+  "name": "list_layers",
+  "title": "List what's on the timeline"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": false,
+   "readOnlyHint": false,
+   "title": "Change layers"
+  },
+  "description": "Change layers already on the timeline by id (from list_layers), as the user can by dragging and typing: retime (startMs/endMs on the source clock, startWord/endWord, or shiftMs to slide it keeping its length), move (x/y, 0\u20131 of the frame, top-left origin), size (text: sizePct; media: width, a fraction of the frame width; zoom: scale), change a title's words (text, *word* for the accent colour), its preset (keeps where it sits) or any look field add_motion takes, a sound's volume (0\u20131; for media, its video's sound), or delete:true. The screen recording (id \"screen\") moves with x/y (its centre), scales with scale (1 = fitted; e.g. fill a 9:16 frame with a landscape screen, then x to pan to what matters), or fit: \"fit\" / \"fill\" / \"center\"; it's kept per frame shape. The camera (id \"camera\") moves with x/y and sizes with size (0.12\u20130.6 of the short edge). Only the fields given change. All edits in one call are one undo step.",
+  "inputSchema": {
+   "properties": {
+    "edits": {
+     "items": {
+      "properties": {
+       "delete": {
+        "type": "boolean"
+       },
+       "endMs": {
+        "type": "number"
+       },
+       "endWord": {
+        "type": "integer"
+       },
+       "fadeMs": {
+        "type": "number"
+       },
+       "fit": {
+        "description": "screen only",
+        "enum": [
+         "fit",
+         "fill",
+         "center"
+        ],
+        "type": "string"
+       },
+       "id": {
+        "type": "string"
+       },
+       "preset": {
+        "enum": [
+         "big-number",
+         "callout",
+         "chapter",
+         "kinetic",
+         "label",
+         "lower-third",
+         "title"
+        ],
+        "type": "string"
+       },
+       "rampMs": {
+        "type": "number"
+       },
+       "scale": {
+        "type": "number"
+       },
+       "shiftMs": {
+        "type": "number"
+       },
+       "size": {
+        "description": "camera only",
+        "type": "number"
+       },
+       "sizePct": {
+        "type": "number"
+       },
+       "startMs": {
+        "type": "number"
+       },
+       "startWord": {
+        "type": "integer"
+       },
+       "text": {
+        "type": "string"
+       },
+       "volume": {
+        "type": "number"
+       },
+       "width": {
+        "type": "number"
+       },
+       "x": {
+        "type": "number"
+       },
+       "y": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "id"
+      ],
+      "type": "object"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "edits"
+   ],
+   "type": "object"
+  },
+  "name": "edit_layer",
+  "title": "Change layers"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": true,
+   "readOnlyHint": true,
+   "title": "Search stock video and photos"
+  },
+  "description": "Search Pexels for stock b-roll. query: what should be on screen, concrete and visual (\"hands typing on a laptop at night\", not \"productivity\"). kind: video (default) or photo. orientation: landscape|portrait|square (default: the take's own shape). count: results (default 10, max 15). Suggestive results are already filtered out; still reject any that look revealing. Returns each result's id (for add_stock), length in seconds, size and title, plus a contact sheet of their first frames numbered in list order. Look at the sheet before choosing.",
+  "inputSchema": {
+   "properties": {
+    "count": {
+     "type": "integer"
+    },
+    "kind": {
+     "enum": [
+      "video",
+      "photo"
+     ],
+     "type": "string"
+    },
+    "orientation": {
+     "enum": [
+      "landscape",
+      "portrait",
+      "square"
+     ],
+     "type": "string"
+    },
+    "query": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  },
+  "name": "search_stock",
+  "title": "Search stock video and photos"
+ },
+ {
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": false,
+   "openWorldHint": true,
+   "readOnlyHint": false,
+   "title": "Put stock b-roll on the video"
+  },
+  "description": "Cover the video with a search_stock result over exactly startWord\u2026endWord (or startMs/endMs, source clock), filling the frame, silent; the speaker's voice carries on underneath. One undo step; it shows on the timeline's media lane and follows the words when cuts change. Pick a video at least as long as the words it covers (a shorter one freezes on its last frame). fadeMs: crossfade in/out (default 0, a straight cut, which reads cleanest for b-roll). Returns the layer id (edit_layer / remove_graphic change it).",
+  "inputSchema": {
+   "properties": {
+    "endMs": {
+     "type": "number"
+    },
+    "endWord": {
+     "type": "integer"
+    },
+    "fadeMs": {
+     "type": "number"
+    },
+    "id": {
+     "description": "A search_stock id, e.g. video-3209828.",
+     "type": "string"
+    },
+    "startMs": {
+     "type": "number"
+    },
+    "startWord": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "id"
+   ],
+   "type": "object"
+  },
+  "name": "add_stock",
+  "title": "Put stock b-roll on the video"
  }
 ]

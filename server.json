@@ -6,7 +6,7 @@
   "version": "0.2.0",
   "websiteUrl": "https://blazingvideo.com/mcp",
   "repository": {
-    "url": "https://github.com/acstener/takes-plugin",
+    "url": "https://github.com/acstener/blazing-video-plugin",
     "source": "github"
   },
   "icons": [
@@ -19,7 +19,7 @@
   "packages": [
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/acstener/takes-plugin/releases/download/v0.2.0/blazing-video.mcpb",
+      "identifier": "https://github.com/acstener/blazing-video-plugin/releases/download/v0.2.0/blazing-video.mcpb",
       "fileSha256": "c6c762093d315763f228683eca36e33d297324b5065ac4927adeb3352feb8813",
       "transport": { "type": "stdio" }
     }

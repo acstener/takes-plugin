@@ -11,8 +11,8 @@ transcript, and share a link, all from Claude Code.
 2. In Claude Code:
 
    ```
-   /plugin marketplace add acstener/takes-plugin
-   /plugin install blazing-video@takes
+   /plugin marketplace add acstener/blazing-video-plugin
+   /plugin install blazing-video@blazing-video
    ```
 
 3. With Blazing Video running, say "record this", "cut the ums", or "give me
@@ -66,6 +66,8 @@ with the same tools.
 | `tighten_pauses` | Shortens every pause over 0.4 s down to 0.15 s. |
 | `trim` | Trims the start and/or end: `startWord` / `endWord` (first / last word to keep) or `startMs` / `endMs`. `clear: true` removes the trim. |
 | `set_camera` | Places and styles the webcam: corner or `x`/`y`, `size`, `shape` (circle, rounded, square), `aspect` (1:1, 4:3, 3:4, 16:9), `zoom` and `panX`/`panY`, `visible`, `removeBackground`, `reset`. |
+| `set_captions` | Animated burned-in captions timed to every kept word: `style` (clean, subtitles, bold-pop, beast, karaoke, word-box, one-word, marker, typewriter, keynote, serif), `customStyle` (any look field), `words` (per-word `emphasis` / `color` by transcript index), `position` / `x` / `y`, `size`, `lineLength`, `textColor`, `highlightColor`, `box`, `enabled`. |
+| `save_subtitles` | An .srt or .vtt of the edit, timed to the edited video. |
 | `set_background` | The studio look: the screen on a gradient wallpaper (dusk, ocean, aurora, mint, peach, snow, graphite) with `padding`, `roundness` and `shadow`. `enabled: false` goes back to full-frame. |
 | `get_frame` | A PNG of the edited video at `timeMs` (after cuts), webcam included. `maxWidth` defaults to 1280. |
 | `undo` | Undoes the last edit. Every edit above is one undo step. |

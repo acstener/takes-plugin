@@ -10,7 +10,7 @@
     "url": "https://github.com/acstener"
   },
   "homepage": "https://blazingvideo.com",
-  "support": "https://github.com/acstener/takes-plugin/issues",
+  "support": "https://github.com/acstener/blazing-video-plugin/issues",
   "icon": "icon.png",
   "server": {
     "type": "node",
